@@ -31,7 +31,6 @@ check_hash() {
     echo "Hash validated for $1"
 }
 build_process() {
-    SCRIPT_DIR="ilo4_toolbox/scripts/iLO4"
     UTIL_DIR="util"
     BUILD_LOC=$(realpath "$3")
     DIR=$(dirname "$1")
@@ -41,7 +40,7 @@ build_process() {
     rm -rf "$BUILD_LOC"
 
     echo "Extracting with iLO4 Toolbox ..."
-    python "$SCRIPT_DIR/ilo4_extract.py" "$FIRMWARE" "$BUILD_LOC" &> /dev/null
+    python "$UTIL_DIR/ilo4_extract.py" "$FIRMWARE" "$BUILD_LOC" &> /dev/null
     echo "Patching bootloader ..."
     python "$UTIL_DIR/patch.py" "$BUILD_LOC/bootloader.bin" "$DIR/patch_bootloader.json" "$BUILD_LOC/bootloader.bin.patched"
     echo "Patching kernel ..."
@@ -50,7 +49,7 @@ build_process() {
     python "$UTIL_DIR/patch.py" "$BUILD_LOC/elf.bin" "$DIR/patch_userland.json" "$BUILD_LOC/elf.bin.patched"
 
     echo "Repacking with iLO4 Toolbox ..."
-    python "$SCRIPT_DIR/ilo4_repack.py" "$FIRMWARE" "$BUILD_LOC/firmware.map" "$BUILD_LOC/elf.bin.patched" "$BUILD_LOC/kernel_main.bin.patched" "$BUILD_LOC/bootloader.bin.patched" &> /dev/null
+    python "$UTIL_DIR/ilo4_repack.py" "$FIRMWARE" "$BUILD_LOC/firmware.map" "$BUILD_LOC/elf.bin.patched" "$BUILD_LOC/kernel_main.bin.patched" "$BUILD_LOC/bootloader.bin.patched" &> /dev/null
     mv "$FIRMWARE.backdoored.toflash" "$DEST"
 
     echo "Final firmware at $3/$(basename "$DEST")"
