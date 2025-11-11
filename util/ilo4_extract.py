@@ -13,7 +13,11 @@ import uuid
 import binascii
 from struct import unpack_from
 from collections import OrderedDict
-from ilo4lib import *
+from ilo4lib import (
+    decompress_all, decompress, compress,
+    HpImageHeader, BootloaderHeader, BootloaderFooter,
+    ImgHeader, SignatureParams, hexdump
+)
 
 BEGIN_SIGN = b"--=</Begin HP Signed File Fingerprint\\>=--\n"
 END_SIGN = b"--=</End HP Signed File Fingerprint\\>=--\n"
