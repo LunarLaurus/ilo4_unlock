@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
+
 # Extract binaries from HPIMAGE update file
+# Originally from https://github.com/airbus-seclab/ilo4_toolbox/blob/master/scripts/iLO4/ilo4_extract.py
+# Updated locally to Python 3 as the original project is archived
 # Blackbox analysis, might be inaccurate
 
 import os
