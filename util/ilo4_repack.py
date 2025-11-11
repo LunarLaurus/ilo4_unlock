@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# Originally from https://github.com/airbus-seclab/ilo4_toolbox/blob/master/scripts/iLO4/ilo4_repack.py
+# Updated locally to Python 3 as the original project is archived
+
 import sys
 import json
 from struct import pack
