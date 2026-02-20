@@ -36,3 +36,28 @@ The handler is likely still present - we just need to find where the IPC dispatc
 |---------|-------------|-------------|-------|
 | NULL_CMD->FAN | 0xB804D0 | 0xB740F8 | -C3D8 |
 | fn_handler | 0xAFD768 | 0xAF1390 | -C3D8 |
+
+## Updated Analysis (2.82 Deep Dive)
+
+**Complete picture discovered:**
+
+### What Was Removed
+- **CLI Parser**: ~5KB complex function (`research/img/health_fan_function.png`)
+- Handles argument parsing, help text, validation
+- Confirmed removed by research
+
+### What Remains
+- **IPC Handlers**: ~256 bytes intact
+- FAN_SET handler: 0x39e064 (same size as 2.77)
+- 61 of 64 fan strings present
+
+### The Block
+- BEQ at 0x39e0c4 branches to defunct error instead of fan control
+- **Fix**: NOP the BEQ (`0a 00 00 ea` → `00 00 00 ea`)
+
+### Recovery
+1. Patch BEQ (5 min) - enables IPC
+2. Add minimal CLI (hours) - ~100 bytes vs ~5000 bytes
+3. OR use IPC directly
+
+**See**: `findings/282_analysis_complete.md` for full details
