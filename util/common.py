@@ -21,30 +21,29 @@ import sys
 
 def read_patch(file):
     with open(file, "rb") as f:
-        handler = f.read()
-        # remove comments ...
+        handler = f.read().decode('utf-8')
         handler_split = handler.split('\n')
         for i in range(len(handler_split)):
             this_line = handler_split[i]
             this_line = this_line.split(";")[0]
             handler_split[i] = this_line
         handler = "\n".join(handler_split)
-        # print handler
         ks = Ks(KS_ARCH_ARM, KS_MODE_ARM)
         try:
             output = ks.asm(handler)
         except KsError as e:
-            print "Error with Keystone ", e.message
+            print("Error with Keystone ", e.message)
             if e.get_asm_count() is not None:
-                print "asmcount = %u" % e.get_asm_count()
+                print("asmcount = %u" % e.get_asm_count())
             sys.exit(1)
-        return ''.join(chr(x) for x in output[0])
+        return bytes(output[0])
+
 def hexdump(src, length=16):
     FILTER = ''.join([(len(repr(chr(x))) == 3) and chr(x) or '.' for x in range(256)])
     lines = []
-    for c in xrange(0, len(src), length):
+    for c in range(0, len(src), length):
         chars = src[c:c+length]
-        hex = ' '.join(["%02x" % ord(x) for x in chars])
-        printable = ''.join(["%s" % ((ord(x) <= 127 and FILTER[ord(x)]) or '.') for x in chars])
+        hex = ' '.join(["%02x" % x for x in chars])
+        printable = ''.join(["%s" % ((x <= 127 and FILTER[x]) or '.') for x in chars])
         lines.append("%04x  %-*s  %s\n" % (c, length*3, hex, printable))
     return ''.join(lines)
